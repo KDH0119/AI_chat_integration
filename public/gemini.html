@@ -94,6 +94,9 @@
                         <div class="chat-room-section">
                             <div class="section-subheader">채팅방</div>
                             <div id="chatRoomList" class="chat-room-list"></div>
+                            <div class="row" style="margin-top: 8px;">
+                                <button id="createChatRoom" class="btn btn-black btn-sm">새 채팅 생성</button>
+                            </div>
                             <div class="row chat-room-pagination">
                                 <button id="chatRoomPrev" class="btn btn-outline btn-sm">이전</button>
                                 <span id="chatRoomPageInfo" class="muted">1 / 1</span>
@@ -160,7 +163,7 @@
                         <span class="tools-label">Reference Image</span>
                         <input type="file" id="thumbImageInput" accept="image/*" hidden>
                         <button id="btnAttachThumbImage" class="btn-tool-upload">
-                            📷 이미지 업로드 (리터칭/참조)
+                            이미지 업로드 (리터칭/참조)
                         </button>
                     </div>
 
@@ -176,7 +179,7 @@
                     <!-- 프롬프트 입력 -->
                     <div class="input-wrapper">
                         <textarea id="thumbPrompt" placeholder="어떻게 바꿔줄까? (예: 수채화 스타일로 바꿔줘, 배경을 우주로 변경해줘, 고양이 귀를 씌워줘)"></textarea>
-                        <button id="btnGenerateThumb" class="btn-send">✨ 생성</button>
+                        <button id="btnGenerateThumb" class="btn-send">생성</button>
                     </div>
                 </div>
             </div>

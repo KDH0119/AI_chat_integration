@@ -375,7 +375,7 @@ function renderCharacters() {
 
 // ... (Memo Functions 생략 - 기존 코드 사용) ...
 function addMemoPad() {
-    if (state.memoPads.length >= 50) return showToast('메모장 최대 50개');
+    if (state.memoPads.length >= 200) return showToast('메모장 최대 200개');
     state.memoPads.push({ id: state.nextMemoId++, title: `메모장 ${state.memoPads.length + 1}`, characters: [{ charIndex: 0, situationTags: '' }] });
     saveToLocalStorage();
     renderMemoPads();
@@ -407,7 +407,7 @@ function renderMemoPads() {
         });
     }
     const badge = document.querySelector('.count-badge');
-    if(badge) badge.textContent = `${state.memoPads.length}/50`;
+    if(badge) badge.textContent = `${state.memoPads.length}/200`;
 }
 
 function getMemoSummary(memo) {

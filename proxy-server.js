@@ -119,12 +119,7 @@ app.post('/api/gemini/chat', async (req, res) => {
             }
         };
 
-        // thinkingConfig 우선순위: 클라이언트 전달 > 모델 기본값
-        const resolvedThinking =
-            thinkingConfig ||
-            (targetModel.startsWith('gemini-3') ? { thinkingLevel: "high" } : null) ||
-            (targetModel.startsWith('gemini-2.5') ? { thinkingBudget: 5000 } : null);
-        if (resolvedThinking) requestPayload.thinkingConfig = resolvedThinking;
+        // thinkingConfig는 v1beta에서 필드 미지원 오류가 있어 항상 제외
 
         const response = await fetch(url, {
             method: 'POST',
@@ -172,7 +167,7 @@ app.post('/api/gemini/chat', async (req, res) => {
 // ==========================================
 app.post('/api/gemini/image', async (req, res) => {
     try {
-        const { apiKey, prompt, image, images, model } = req.body;
+        const { apiKey, prompt, image, images, model, aspectRatio, imageSize } = req.body;
         
         // 님이 원하시는 Gemini 3.0 모델
         const targetModel = 'gemini-3-pro-image-preview'; 
@@ -210,6 +205,13 @@ app.post('/api/gemini/image', async (req, res) => {
                 { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "OFF" }
             ]
         };
+
+        if (aspectRatio || imageSize) {
+            requestPayload.generationConfig.imageConfig = {
+                ...(aspectRatio ? { aspectRatio } : {}),
+                ...(imageSize ? { imageSize } : {})
+            };
+        }
 
         const response = await fetch(url, {
             method: 'POST',

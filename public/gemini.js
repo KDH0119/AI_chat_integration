@@ -63,7 +63,6 @@ const state = {
 document.addEventListener('DOMContentLoaded', () => {
     normalizeChatModel();
     loadChatRooms();
-    startNewChatSession();
     ensureActiveChatRoom();
     if (state.googleApiKey) {
         const el = document.getElementById('googleApiKey');
@@ -196,6 +195,12 @@ function initEventListeners() {
         }
     });
 
+    const btnCreateChatRoom = document.getElementById('createChatRoom');
+    if (btnCreateChatRoom) btnCreateChatRoom.addEventListener('click', () => {
+        startNewChatSession();
+        renderChatHistoryFromState();
+    });
+
     // --- Compose Mode ---
     const btnAttachBg = document.getElementById('btnAttachComposeBg');
     const bgInput = document.getElementById('composeBgInput');
@@ -325,9 +330,9 @@ function saveChatRooms() {
 
 function ensureActiveChatRoom() {
     if (!state.chatRooms.length) {
-        const room = createChatRoom('새 채팅');
-        state.chatHistory = room.history || [];
-        return room;
+        state.chatHistory = [];
+        state.activeChatRoomId = null;
+        return null;
     }
     let room = state.chatRooms.find(r => r.id === state.activeChatRoomId);
     if (!room) {
@@ -344,7 +349,7 @@ function getActiveChatRoom() {
 }
 
 function startNewChatSession() {
-    // 새로고침 시 현재 방 대신 빈 새 방을 활성화 (기록은 로컬에 유지)
+    // "새 채팅 생성" 버튼으로만 새 방 생성
     const room = createChatRoom('새 채팅');
     state.chatHistory = [];
     state.activeChatRoomId = room.id;
@@ -431,7 +436,7 @@ function renderChatRooms() {
 
     listEl.innerHTML = '';
     if (!slice.length) {
-        listEl.innerHTML = '<div class="chat-room-empty">채팅 메시지를 보내면 자동으로 채팅방이 생성됩니다.</div>';
+        listEl.innerHTML = '<div class="chat-room-empty">새 채팅 생성 버튼으로 채팅방을 추가할 수 있습니다.</div>';
     } else {
         slice.forEach(room => {
             const div = document.createElement('div');
@@ -1132,6 +1137,7 @@ async function downloadAllComposites() {
 // ====== Chat ======
 async function sendChatMessage() {
     if (!state.googleApiKey) return alert('Google API 키를 먼저 설정해주세요.');
+    if (!state.activeChatRoomId) return alert('새 채팅 생성 버튼으로 채팅방을 먼저 만들어주세요.');
     const activeRoom = ensureActiveChatRoom();
     const inputEl = document.getElementById('chatPrompt');
     const text = inputEl.value.trim();
